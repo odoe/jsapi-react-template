@@ -1,19 +1,22 @@
 import React, { Component, createContext } from "react";
 
-const AppState = {
-  startup: async (container: HTMLDivElement) => {
-    const mapping = await import("../data/map");
-    mapping.initialize(container);
-  }
-}
-
 // main application context
-export const AppContext = createContext(AppState);
+export const AppContext = createContext({
+  loaded: false,
+  startup: async (container: HTMLDivElement) => {}
+});
 
 // main application provider
 export class AppProvider extends Component {
 
-  state = AppState
+  state = {
+    loaded: false,
+    startup: async (container: HTMLDivElement) => {
+      const mapping = await import("../data/map");
+      await mapping.initialize(container);
+      this.setState( { loaded: true } );
+    }
+  }  
 
   render() {
     return (

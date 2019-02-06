@@ -1,4 +1,5 @@
 import React from "react"
+import { AppContext } from '../contexts/App'
 
 interface HeaderProps {
   appTitle: string
@@ -6,8 +7,12 @@ interface HeaderProps {
 
 export const Header = ({ appTitle }: HeaderProps) => {
   return (
-    <header className="header">
-      <span>{appTitle}</span>
-    </header>
+    <AppContext.Consumer>
+      {value => (
+        <header className="header">
+          <span>{appTitle} ({!value.loaded && 'not'} loaded)</span>
+        </header>
+      )}
+    </AppContext.Consumer>
   )
 }

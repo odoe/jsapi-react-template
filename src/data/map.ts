@@ -33,7 +33,7 @@ view.ui.add(legend, "bottom-left");
  */
 export const initialize = (container: HTMLDivElement) => {
   view.container = container;
-  view
+  return view
     .when()
     .then(_ => {
       // tslint:disable-next-line:no-console

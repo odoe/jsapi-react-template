@@ -12,6 +12,6 @@ describe("components/Header", async () => {
   it("should contain header text", () => {
     const { getByText } = render(<Header appTitle="This is a test" />);
     const text = getByText(/^This is a test/);
-    expect(text.innerText).to.equal("This is a test");
+    expect(text.innerText).to.equal("This is a test (not loaded)");
   });
 });
