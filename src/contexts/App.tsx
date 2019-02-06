@@ -1,23 +1,50 @@
-import React, { Component, createContext } from "react";
+import React, { createContext, useEffect, useReducer } from "react";
 
-const AppState = {
-  startup: async (container: HTMLDivElement) => {
-    const mapping = await import("../data/map");
-    mapping.initialize(container);
-  }
+export interface AppProviderProps {
+  children: JSX.Element[];
 }
+
+const initialState = {
+  container: HTMLDivElement,
+  mounted: false
+};
 
 // main application context
-export const AppContext = createContext(AppState);
+export const AppContext = createContext({
+  state: initialState,
+  setState: (i: any) => i
+});
 
 // main application provider
-export class AppProvider extends Component {
+export const AppProvider = ({ children }: AppProviderProps) => {
+  const [state, setState] = useReducer(
+    (currentState, newState) => ({ ...currentState, ...newState }),
+    {
+      ...initialState
+    }
+  );
 
-  state = AppState
+  // when container is ready, we can load the
+  // mapping portion of our application
+  // and initialize it
+  const loadMap = async () => {
+    if (state.mounted && state.container) {
+      const mapping = await import("../data/map");
+      mapping.initialize(state.container);
+    }
+  };
 
-  render() {
-    return (
-      <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
-    )
-  }
-}
+  useEffect(
+    () => {
+      loadMap();
+    },
+    [ state.container ]
+  );
+
+  const value = {
+    state,
+    setState
+  };
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+};

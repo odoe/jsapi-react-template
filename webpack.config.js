@@ -18,7 +18,7 @@ module.exports = function(_, arg) {
       index: [
         "@dojo/framework/shim/Promise",
         "./src/css/main.scss",
-        "./src/config.ts",
+        "./src/worker-config.ts",
         "./src/index.tsx"
       ]
     },

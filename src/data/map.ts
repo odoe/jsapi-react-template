@@ -3,9 +3,11 @@ import WebMap from "esri/WebMap";
 import Expand from "esri/widgets/Expand";
 import Legend from "esri/widgets/Legend";
 
+import { WebMapId } from "../config";
+
 export const webmap = new WebMap({
   portalItem: {
-    id: "f2e9b762544945f390ca4ac3671cfa72"
+    id: WebMapId
   }
 });
 
