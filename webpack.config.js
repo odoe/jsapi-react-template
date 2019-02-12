@@ -144,21 +144,7 @@ module.exports = function(_, arg) {
         chunkFilename: "[id].css"
       }),
 
-      new HtmlWebpackInlineSourcePlugin(),
-
-      new WebpackPwaManifest({
-        name: "ArcGIS React Template",
-        short_name: "ArcGISReactTemplate",
-        description: "React Template for ArcGIS JSAPI",
-        background_color: "#0079c1",
-        theme_color: "#0079c1",
-        icons: [
-          {
-            src: path.resolve("public/assets/icon.png"),
-            sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
-          }
-        ]
-      })
+      new HtmlWebpackInlineSourcePlugin()
     ],
     resolve: {
       modules: [
@@ -175,6 +161,21 @@ module.exports = function(_, arg) {
   };
 
   if (arg.mode === "production") {
+    config.plugins.push(
+      new WebpackPwaManifest({
+        name: "ArcGIS React Template",
+        short_name: "ArcGISReactTemplate",
+        description: "React Template for ArcGIS JSAPI",
+        background_color: "#0079c1",
+        theme_color: "#0079c1",
+        icons: [
+          {
+            src: path.resolve("public/assets/icon.png"),
+            sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+          }
+        ]
+      })
+    );
     config.plugins.push(
       new WorkboxPlugin.GenerateSW({
         clientsClaim: true,
