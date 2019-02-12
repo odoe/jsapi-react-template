@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export interface AppProviderProps {
   children: JSX.Element[];
@@ -16,12 +16,7 @@ export const AppContext = createContext({
 
 // main application provider
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [state, setState] = useReducer(
-    (currentState, newState) => ({ ...currentState, ...newState }),
-    {
-      ...initialState
-    }
-  );
+  const [state, setState] = useState({ ...initialState });
 
   // when container is ready, we can load the
   // mapping portion of our application
@@ -44,7 +39,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   const value = {
     state,
-    setState
+    setState: (newState: any) => { setState({ ...state, ...newState }) }
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
