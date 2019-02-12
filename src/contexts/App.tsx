@@ -5,8 +5,7 @@ export interface AppProviderProps {
 }
 
 const initialState = {
-  container: HTMLDivElement,
-  mounted: false
+  container: null as HTMLDivElement
 };
 
 // main application context
@@ -28,15 +27,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   // mapping portion of our application
   // and initialize it
   const loadMap = async () => {
-    if (state.mounted && state.container) {
-      const mapping = await import("../data/map");
-      mapping.initialize(state.container);
-    }
+    const mapping = await import("../data/map");
+    mapping.initialize(state.container);
   };
 
   useEffect(
     () => {
+      if (!state.container) {
+        return
+      }
       loadMap();
+      // TODO: return clean up function that sets the view's container to null?
     },
     [ state.container ]
   );
