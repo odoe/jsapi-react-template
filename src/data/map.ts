@@ -12,7 +12,6 @@ export const webmap = new WebMap({
 });
 
 export const view = new MapView({
-  container: "viewDiv",
   map: webmap
 });
 
