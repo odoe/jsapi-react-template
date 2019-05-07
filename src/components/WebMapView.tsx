@@ -1,31 +1,18 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from 'react';
 
-import { AppContext } from "../contexts/App";
+import { AppContext } from '../contexts/App';
 
 const WebMapView = () => {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const { setState } = useContext(AppContext);
-  
-  // we can let the application
-  // context know that the component
-  // is mounted and ready
-  useEffect(
-    () => {
-      setState({
-        container: mapRef.current
-      });
-      // TODO: clean up function?
-      // only thing I could think of here would be to set mapRef.current = null
-      // in the hopes that would end up causing view.container to be set to null
-    },
-    // NOTE: this ensures this is only fired once, like componentDidMount()
-    []
-  );
+    const mapRef = useRef<HTMLDivElement>(null);
+    const { setContainer } = useContext(AppContext);
 
-  return (
-    <div className="webmap" ref={mapRef}>
-    </div>
-  );
+    // we can let the application context
+    // know that the component is ready
+    useEffect(() => {
+        setContainer(mapRef.current);
+    }, [mapRef.current]);
+
+    return <div className="webmap" ref={mapRef} />;
 };
 
 export { WebMapView };

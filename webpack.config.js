@@ -96,9 +96,7 @@ module.exports = function(_, arg) {
               loader: "sass-loader",
               options: {
                 sourceMap: true,
-                includePaths: [
-                  path.resolve("./node_modules")
-                ]
+                includePaths: [path.resolve("./node_modules")]
               }
             }
           ]
@@ -110,7 +108,7 @@ module.exports = function(_, arg) {
         "process.env.NODE_ENV": JSON.stringify(arg.mode || "production")
       }),
 
-      new CleanWebpackPlugin(["dist"]),
+      new CleanWebpackPlugin(),
 
       new CopyWebpackPlugin([
         {
@@ -144,7 +142,21 @@ module.exports = function(_, arg) {
         chunkFilename: "[id].css"
       }),
 
-      new HtmlWebpackInlineSourcePlugin()
+      new HtmlWebpackInlineSourcePlugin(),
+
+      new WebpackPwaManifest({
+        name: "ArcGIS React Template",
+        short_name: "ArcGISReactTemplate",
+        description: "React Template for ArcGIS JSAPI",
+        background_color: "#0079c1",
+        theme_color: "#0079c1",
+        icons: [
+          {
+            src: path.resolve("public/assets/icon.png"),
+            sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+          }
+        ]
+      })
     ],
     resolve: {
       modules: [
@@ -161,21 +173,6 @@ module.exports = function(_, arg) {
   };
 
   if (arg.mode === "production") {
-    config.plugins.push(
-      new WebpackPwaManifest({
-        name: "ArcGIS React Template",
-        short_name: "ArcGISReactTemplate",
-        description: "React Template for ArcGIS JSAPI",
-        background_color: "#0079c1",
-        theme_color: "#0079c1",
-        icons: [
-          {
-            src: path.resolve("public/assets/icon.png"),
-            sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
-          }
-        ]
-      })
-    );
     config.plugins.push(
       new WorkboxPlugin.GenerateSW({
         clientsClaim: true,
@@ -198,24 +195,24 @@ module.exports = function(_, arg) {
             handler: "cacheFirst"
           },
           {
-            urlPattern: new RegExp("^https://js\.arcgis\.com/"),
+            urlPattern: new RegExp("^https://js.arcgis.com/"),
             handler: "staleWhileRevalidate"
           },
           {
-            urlPattern: new RegExp("^https://arcgis\.com\/sharing/"),
+            urlPattern: new RegExp("^https://arcgis.com/sharing/"),
             handler: "staleWhileRevalidate"
           },
           {
-            urlPattern: new RegExp("^https://static\.arcgis\.com/"),
+            urlPattern: new RegExp("^https://static.arcgis.com/"),
             handler: "staleWhileRevalidate"
           },
           // Google Material stuff
           {
-            urlPattern: new RegExp("^https://fonts\.gstatic\.com/"),
+            urlPattern: new RegExp("^https://fonts.gstatic.com/"),
             handler: "staleWhileRevalidate"
           },
           {
-            urlPattern: new RegExp("^https://fonts\.googleapis\.com/"),
+            urlPattern: new RegExp("^https://fonts.googleapis.com/"),
             handler: "staleWhileRevalidate"
           }
         ]

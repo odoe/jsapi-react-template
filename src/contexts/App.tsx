@@ -1,46 +1,39 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from 'react';
 
 export interface AppProviderProps {
-  children: JSX.Element[];
+    children: JSX.Element[];
 }
 
-const initialState = {
-  container: null as HTMLDivElement
-};
+interface ContextProps {
+    container: HTMLDivElement;
+    setContainer: (a: HTMLDivElement) => void;
+}
 
 // main application context
-export const AppContext = createContext({
-  state: initialState,
-  setState: (i: any) => i
-});
+export const AppContext = createContext<ContextProps>(null);
 
 // main application provider
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [state, setState] = useState({ ...initialState });
+    const [container, setContainer] = useState<HTMLDivElement>(null);
 
-  // when container is ready, we can load the
-  // mapping portion of our application
-  // and initialize it
-  const loadMap = async () => {
-    const mapping = await import("../data/map");
-    mapping.initialize(state.container);
-  };
+    // when container is ready, we can load the
+    // mapping portion of our application
+    // and initialize it
+    const loadMap = async () => {
+        if (container) {
+            const mapping = await import('../data/map');
+            mapping.initialize(container);
+        }
+    };
 
-  useEffect(
-    () => {
-      if (!state.container) {
-        return
-      }
-      loadMap();
-      // TODO: return clean up function that sets the view's container to null?
-    },
-    [ state.container ]
-  );
+    useEffect(() => {
+        loadMap();
+    }, [container]);
 
-  const value = {
-    state,
-    setState: (newState: any) => { setState({ ...state, ...newState }) }
-  };
+    const value = {
+        container,
+        setContainer,
+    };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+    return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
